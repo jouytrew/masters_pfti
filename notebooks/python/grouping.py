@@ -1,17 +1,9 @@
 import numpy as np
 import pandas as pd
+import tools
 
 class Resource:
-    def __init__(self, weights: np.array, grades: np.array):
-        data = {
-            'weight': weights,
-            'grade': grades
-        }
-        
-        cleaned_info = self.clean_data(pd.DataFrame(data))
-        
-        # after cleaning, check if there is data
-        
+    def __init__(self, cleaned_info: pd.DataFrame):
         self.info = self.calculate_derived_data(cleaned_info)
         self.calculate_intermediate(self.info)
         self.heterogeneity = self.calculate_heterogeneity(self.info)
@@ -64,11 +56,21 @@ class Grouping:
         self.resources = {}
         
     def add_resource(self, resource_id: str, weights: np.array, grades: np.array):
+        # Check if the arrays are the same length
         if len(weights) == len(grades):
-            if len(weights) > 0:
-                self.resources[resource_id] = Resource(weights, grades)
+            # Clean data
+            cleaned_data = tools.clean_data(
+                pd.DataFrame({
+                    'weight': weights,
+                    'grade': grades
+                })
+            )
+            
+            # Check if there is data after cleaning
+            if len(cleaned_data) > 0:
+                self.resources[resource_id] = Resource(cleaned_data)
             else:
-                self.resources[resource_id] = None
-                print(f"No data for grouping: {self.id}, {resource_id}")
+                # TODO: Throw error to be handled
+                print(f"No data for grouping: {self.id}, resource: {resource_id}")
         else:
             raise Exception(f"[Grouping ID: {id}] Weight and grade arrays must be same length.")
