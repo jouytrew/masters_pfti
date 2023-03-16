@@ -4,9 +4,9 @@ import tools
 
 class Resource:
     def __init__(self, cleaned_info: pd.DataFrame):
-        self.info = self.calculate_derived_data(cleaned_info)
-        self.calculate_intermediate(self.info)
-        self.heterogeneity = self.calculate_heterogeneity(self.info)
+        self._info = self.__calculate_derived_data(cleaned_info)
+        self.__calculate_intermediate(self._info)
+        self._heterogeneity = self.__calculate_heterogeneity(self._info)
              
     def clean_data(self, data: pd.DataFrame):
         # data = data.replace(-9, np.nan)
@@ -16,7 +16,7 @@ class Resource:
         
         return data
     
-    def calculate_derived_data(self, cleaned_info: pd.DataFrame):
+    def __calculate_derived_data(self, cleaned_info: pd.DataFrame):
         df = cleaned_info
         df['cml_weight'] = df['weight'].cumsum()
     
@@ -33,7 +33,7 @@ class Resource:
         
         return df
     
-    def calculate_intermediate(self, df):
+    def __calculate_intermediate(self, df):
         if len(df) > 0:
             b = df['weight']
             c = df['cml_grade'].iloc[-1]
@@ -43,11 +43,23 @@ class Resource:
             num, den = np.multiply(a, b), np.multiply(c, d)
             df['int_het'] = np.power(np.divide(num, den), 2)  # (num/den)^2
         
-    def calculate_heterogeneity(self, df):
+    def __calculate_heterogeneity(self, df):
         if len(df) > 0:
             return len(df) * sum(df['int_het'])
         else:
             return np.NaN
+        
+    def get_heterogeneity(self):
+        return self._heterogeneity
+    
+    def get_info(self):
+        return self._info
+    
+    def get_grade(self):
+        return self._info['cml_grade'].iloc[-1]
+    
+    def get_cml_weight(self):
+        return self._info['cml_weight'].iloc[-1]
 
     
 class Grouping:

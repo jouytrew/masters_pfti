@@ -35,13 +35,21 @@ def plot_grade_recovery_curve(ax: plt.Axes, df: pd.DataFrame, element: str, s=3,
     ax_sec.scatter(x, y, color='red', s=s)
     
     
-def plot_g_r(ax: plt.Axes, ax_sec: plt.Axes, df: pd.DataFrame, s=1, alpha=1):
+def plot_g_r(ax: plt.Axes, ax_sec: plt.Axes, df: pd.DataFrame, color_g='blue', color_r='red', *args, **kwargs):
     x = df['cml_weight_pct']
     y = df['cml_grade']
-    ax.scatter(x, y, color='blue', alpha=alpha, s=s)
+    ax.plot(x, y, color=color_g, **kwargs)
     
     y = df['cml_recovery']
-    ax_sec.scatter(x, y, color='red', alpha=alpha, s=s)
+    ax_sec.plot(x, y, color=color_r, **kwargs)
+    
+def scatter_g_r(ax: plt.Axes, ax_sec: plt.Axes, df: pd.DataFrame, color_g='blue', color_r='red', *args, **kwargs):
+    x = df['cml_weight_pct']
+    y = df['cml_grade']
+    ax.scatter(x, y, color=color_g, **kwargs)
+    
+    y = df['cml_recovery']
+    ax_sec.scatter(x, y, color=color_r, **kwargs)
     
 def set_g_r_labels(ax: plt.Axes, ax_sec: plt.Axes, element: str):
     ax.set_xlabel("Cumulative Mass %")
