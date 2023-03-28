@@ -1,4 +1,4 @@
-*.svg
-*.png
-*.gif
+*.docx
+
+outputs/
 data/
