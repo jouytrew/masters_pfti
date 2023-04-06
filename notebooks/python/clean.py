@@ -9,7 +9,19 @@ class Cleaner(ABC):
     @abstractmethod
     def get_processed_data():
         pass
+
+class DrawPointCoordCleaner(Cleaner):
+    @staticmethod
+    def get_processed_data():
+        df = DrawPointCoordCleaner._import_data()
+        return df
     
+    def _import_data():
+        FILE_LOC = '../data/ptfi_1/'
+        FILE_NAME = 'DP_block_grade estimates_actual tons_dp coordinate.xlsx'
+        
+        return pd.read_excel(FILE_LOC + FILE_NAME, sheet_name='DP_Coordinates')
+
 class PCBCCleaner(Cleaner):
     @staticmethod
     def get_processed_data():
@@ -27,7 +39,6 @@ class PCBCCleaner(Cleaner):
             'draw_tons': pd.read_excel(FILE_LOC + FILE_NAME, sheet_name='Drawn Tons'),
             'cu_pcbc': pd.read_excel(FILE_LOC + FILE_NAME, sheet_name='Cu_PCBC'),
             'au_pcbc': pd.read_excel(FILE_LOC + FILE_NAME, sheet_name='Au_PCBC'),
-            'dp_coords': pd.read_excel(FILE_LOC + FILE_NAME, sheet_name='DP_Coordinates')
         }
         
     def _preprocess_data(data: dict):
@@ -93,3 +104,10 @@ class PCBCCleaner(Cleaner):
             data,
             columns=headers
         ).dropna().reset_index(drop=True)
+
+
+class DPAssayCleaner(Cleaner):
+    @staticmethod
+    def get_processed_data():
+        pass
+
