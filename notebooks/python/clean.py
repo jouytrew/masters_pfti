@@ -82,14 +82,13 @@ class PCBCCleaner(Cleaner):
         
         headers = [
             'dhid',
-            'month',
+            'date',
             'weight',
-            'cu',
-            'au'
+            'CU',
+            'AU'
         ]
         
         data = []
-
         for dhid in dhids:
             for month in months:
                 data.append([
@@ -109,5 +108,18 @@ class PCBCCleaner(Cleaner):
 class DPAssayCleaner(Cleaner):
     @staticmethod
     def get_processed_data():
-        pass
+        data = DPAssayCleaner._import_data()
+        
+        assay['Tons_Sampling'] = assay['Tons_Sampling'].astype(float)
 
+        rename_cols = list(assay.columns)[7:-1]
+        for col in rename_cols:
+            assay = assay.rename(columns={col: col.split('_')[0].upper()})
+
+    def _import_data():
+        return pd.read_csv("../data/ptfi_1/dmlz_assay.csv")
+
+# We will analyse the renamed "dmlz_assay" csv file in this notebook
+
+
+    
