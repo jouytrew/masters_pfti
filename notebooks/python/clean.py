@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 import pandas as pd
 import numpy as np
-import os,  sys
 import datetime as dt
 
 class Cleaner(ABC):
@@ -13,8 +12,21 @@ class Cleaner(ABC):
 class DrawPointCoordCleaner(Cleaner):
     @staticmethod
     def get_processed_data():
-        df = DrawPointCoordCleaner._import_data()
-        return df
+        imported_data = DrawPointCoordCleaner._import_data()
+        processed_data = DrawPointCoordCleaner._process_data(imported_data)
+        return processed_data
+    
+    def _process_data(data: pd.DataFrame):
+        data = data.rename(
+            columns={
+                "Draw Point Name": "name", 
+                "X-dpt": "x",
+                'Y-dpt': 'y',
+                'Z-dpt': 'z'
+            }
+        )
+        data = data.set_index('name')
+        return data
     
     def _import_data():
         FILE_LOC = '../data/ptfi_1/'
@@ -25,8 +37,8 @@ class DrawPointCoordCleaner(Cleaner):
 class PCBCCleaner(Cleaner):
     @staticmethod
     def get_processed_data():
-        data = PCBCCleaner._import_data()
-        preprocessed_data = PCBCCleaner._preprocess_data(data)
+        imported_data = PCBCCleaner._import_data()
+        preprocessed_data = PCBCCleaner._preprocess_data(imported_data)
         combined_data = PCBCCleaner._combine_data(preprocessed_data)
         
         return combined_data
@@ -109,17 +121,82 @@ class DPAssayCleaner(Cleaner):
     @staticmethod
     def get_processed_data():
         data = DPAssayCleaner._import_data()
+        preprocessed_data = DPAssayCleaner._preprocess_data(data)
+        combined_data = DPAssayCleaner._combine_duplicates(preprocessed_data)
+        return combined_data
         
-        assay['Tons_Sampling'] = assay['Tons_Sampling'].astype(float)
-
-        rename_cols = list(assay.columns)[7:-1]
-        for col in rename_cols:
-            assay = assay.rename(columns={col: col.split('_')[0].upper()})
-
     def _import_data():
         return pd.read_csv("../data/ptfi_1/dmlz_assay.csv")
+    
+    def _preprocess_data(data: pd.DataFrame):
+        data['Tons_Sampling'] = data['Tons_Sampling'].astype(float)
 
-# We will analyse the renamed "dmlz_assay" csv file in this notebook
+        rename_cols = list(data.columns)[7:-1]
+        for col in rename_cols:
+            data = data.rename(columns={col: col.split('_')[0].upper()})
+        
+        names = {
+            'HOLEID': 'dhid',
+            'DATESAMPLED': 'date',
+            'SampleWeight': 'weight'
+        }
+        
+        data = data.rename(columns=names)    
+        
+        return data
+    
+    # Take the repeated `SAMPLEID` values and combine them as they shouldn't be treated as independent values
+    def _combine_duplicates(data: pd.DataFrame):
+        # idxs = [
+        #     [16209, 16210],
+        #     [18704, 18705],
+        #     [18739, 18740]
+        # ]
+        # data.iloc[np.array(idxs).flatten()]
 
+        # SAMPLE_WEIGHT = 'SampleWeight'
+        # numeric_cols = list(assay.columns)[7:-1]
 
+        # idxs = [
+        #     [16209, 16210],
+        #     [18704, 18705],
+        #     [18739, 18740]
+        # ]
+        # assay.iloc[np.array(idxs).flatten()]
+
+        # TODO: combine the data from the same samples
+
+        # for combine_ids in idxs:
+        #     w = []
+        #     sample_data = {}
+            
+        #     for id in combine_ids:
+        #         row = assay.loc[id]
+                
+        #         w.append(row[SAMPLE_WEIGHT])
+        #         for col in numeric_cols:
+        #             if col not in sample_data:
+        #                 sample_data[col] = [row[col]]
+        #             else:
+        #                 sample_data[col].append(row[col])
+            
+        #     combined_sample = {}
+                    
+        #     sample = assay.loc[combine_ids[0]].to_dict()
+            
+        #     for id in combine_ids[1:]:
+        #         sample_add = assay.loc[id]
+                
+        #         for col in numeric_cols:
+        #             if np.isnan(sample_add[col]):
+        #                 sample[col] = np.nan
+        #             else:
+        #                 sample[col] = (sample[col] * sample[SAMPLE_WEIGHT]) + (sample_add[col] * sample_add[SAMPLE_WEIGHT]) / (sample[SAMPLE_WEIGHT] + sample_add[SAMPLE_WEIGHT])
+        #         sample[SAMPLE_WEIGHT] += sample_add[SAMPLE_WEIGHT]
+            
+        #     assay = assay.drop(axis=0, index=combine_ids)
+        #     df_dictionary = pd.DataFrame([sample])
+        #     assay = pd.concat([assay, df_dictionary], ignore_index=True)
+
+        return data
     
