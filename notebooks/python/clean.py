@@ -116,13 +116,12 @@ class PCBCCleaner(Cleaner):
             columns=headers
         ).dropna().reset_index(drop=True)
 
-
-class DPAssayCleaner(Cleaner):
+class DrawPointAssayCleaner(Cleaner):
     @staticmethod
     def get_processed_data():
-        data = DPAssayCleaner._import_data()
-        preprocessed_data = DPAssayCleaner._preprocess_data(data)
-        combined_data = DPAssayCleaner._combine_duplicates(preprocessed_data)
+        data = DrawPointAssayCleaner._import_data()
+        preprocessed_data = DrawPointAssayCleaner._preprocess_data(data)
+        combined_data = DrawPointAssayCleaner._combine_duplicates(preprocessed_data)
         return combined_data
         
     def _import_data():
@@ -199,4 +198,8 @@ class DPAssayCleaner(Cleaner):
         #     assay = pd.concat([assay, df_dictionary], ignore_index=True)
 
         return data
+
+class DrillholeAssayCleaner(Cleaner):
+    pass
+
     

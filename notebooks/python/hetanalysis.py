@@ -49,7 +49,7 @@ class HetAnalysis:
 
             num, den = np.multiply(a, b), np.multiply(c, d)
             df['int_het'] = np.power(np.divide(num, den), 2)  # (num/den)^2
-        
+    
     def __calculate_heterogeneity(self, df):
         if len(df) > 0:
             return len(df) * sum(df['int_het'])

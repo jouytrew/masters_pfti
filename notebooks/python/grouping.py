@@ -2,18 +2,20 @@ import numpy as np
 import pandas as pd
 import tools
 
+# This file is being depreceated
+
 class Resource:
     def __init__(self, cleaned_info: pd.DataFrame):
         self._info = self.__calculate_derived_data(cleaned_info)
         self.__calculate_intermediate(self._info)
         self._heterogeneity = self.__calculate_heterogeneity(self._info)
-             
+    
     # def clean_data(self, data: pd.DataFrame):
     #     # data = data.replace(-9, np.nan)
     #     data = data.dropna(axis=0)
     #     data = data.sort_values(by='grade', ascending=False)
     #     data = data.reset_index(drop=True)
-        
+    
     #     return data
     
     def __calculate_derived_data(self, cleaned_info: pd.DataFrame):
