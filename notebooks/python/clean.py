@@ -202,4 +202,7 @@ class DrawPointAssayCleaner(Cleaner):
 class DrillholeAssayCleaner(Cleaner):
     pass
 
-    
+def group_by_dhid():
+    # write some code to group by dhids
+    pass
+
