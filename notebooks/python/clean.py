@@ -58,10 +58,10 @@ class PCBCCleaner(Cleaner):
             'Draw Point Name': 'name'
         }
 
-        cols = list(data['draw_tons'].columns)
-        for col_name in cols:
-            if isinstance(col_name, dt.datetime):
-                names[col_name] = f'{col_name.year}_{col_name.month}'
+        # cols = list(data['draw_tons'].columns)
+        # for col_name in cols:
+        #     if isinstance(col_name, dt.datetime):
+        #         names[col_name] = f'{col_name.year}_{col_name.month}'
                 
         # Draw Tons
         data['draw_tons'] = data['draw_tons'].rename(
@@ -122,6 +122,7 @@ class DrawPointAssayCleaner(Cleaner):
         data = DrawPointAssayCleaner._import_data()
         preprocessed_data = DrawPointAssayCleaner._preprocess_data(data)
         combined_data = DrawPointAssayCleaner._combine_duplicates(preprocessed_data)
+        
         return combined_data
         
     def _import_data():
@@ -130,6 +131,7 @@ class DrawPointAssayCleaner(Cleaner):
     def _preprocess_data(data: pd.DataFrame):
         data['Tons_Sampling'] = data['Tons_Sampling'].astype(float)
 
+        # Rename all the columns to a capitalized element code i.e. "CU", "AU"
         rename_cols = list(data.columns)[7:-1]
         for col in rename_cols:
             data = data.rename(columns={col: col.split('_')[0].upper()})
@@ -141,6 +143,8 @@ class DrawPointAssayCleaner(Cleaner):
         }
         
         data = data.rename(columns=names)    
+        
+        data['date'] = pd.to_datetime(data['date'])
         
         return data
     
@@ -198,6 +202,32 @@ class DrawPointAssayCleaner(Cleaner):
         #     assay = pd.concat([assay, df_dictionary], ignore_index=True)
 
         return data
+
+class BlockModelCleaner(Cleaner):
+    @staticmethod
+    def get_processed_data():
+        imported_data = BlockModelCleaner._import_data()
+        preprocessed_data = BlockModelCleaner._preprocess_data(imported_data)
+        
+        return preprocessed_data
+    
+    def _import_data():
+        BM_ROOT = '../data/ptfi_2/dh_and_bm_data/DMLZ_Block_Model/'
+        return pd.read_csv(BM_ROOT + 'block_model.csv', index_col=0)
+        
+    def _preprocess_data(data: pd.DataFrame):
+        names = {
+            'ag': 'AG',
+            'au': 'AU',
+            'cu': 'CU'
+        }
+
+        data = data.rename(
+            columns = names
+        )
+        
+        return data
+
 
 class DrillholeAssayCleaner(Cleaner):
     pass
