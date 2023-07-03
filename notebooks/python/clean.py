@@ -36,6 +36,15 @@ class DrawPointCoordCleaner(Cleaner):
 
 class PCBCCleaner(Cleaner):
     @staticmethod
+    def get_processed_and_filtered_data():
+        pcbc_df = PCBCCleaner.get_processed_data()
+        
+        earliest_dp = dt.date(2020, 10, 2)  # Earliest date in the drawpoints dataset
+        filtered_df = pcbc_df.query('date > @earliest_dp')
+        
+        return pcbc_df, filtered_df
+    
+    @staticmethod
     def get_processed_data():
         imported_data = PCBCCleaner._import_data()
         preprocessed_data = PCBCCleaner._preprocess_data(imported_data)
