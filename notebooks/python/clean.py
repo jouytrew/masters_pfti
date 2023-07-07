@@ -35,14 +35,21 @@ class DrawPointCoordCleaner(Cleaner):
         return pd.read_excel(FILE_LOC + FILE_NAME, sheet_name='DP_Coordinates')
 
 class PCBCCleaner(Cleaner):
+    # @staticmethod
+    # def get_processed_and_filtered_data():
+    #     pcbc_df = PCBCCleaner.get_processed_data()
+        
+    #     earliest_dp = dt.date(2020, 10, 2)  # Earliest date in the drawpoints dataset
+    #     filtered_df = pcbc_df.query('date > @earliest_dp')
+        
+    #     return pcbc_df, filtered_df
+    
     @staticmethod
-    def get_processed_and_filtered_data():
-        pcbc_df = PCBCCleaner.get_processed_data()
-        
+    def _filter_data(data):
         earliest_dp = dt.date(2020, 10, 2)  # Earliest date in the drawpoints dataset
-        filtered_df = pcbc_df.query('date > @earliest_dp')
+        filtered_data = data.query('date > @earliest_dp')
         
-        return pcbc_df, filtered_df
+        return filtered_data     
     
     @staticmethod
     def get_processed_data():
@@ -50,7 +57,10 @@ class PCBCCleaner(Cleaner):
         preprocessed_data = PCBCCleaner._preprocess_data(imported_data)
         combined_data = PCBCCleaner._combine_data(preprocessed_data)
         
-        return combined_data
+        # return combined_data
+        
+        filtered_data = PCBCCleaner._filter_data(combined_data)
+        return filtered_data
     
     def _import_data():
         FILE_LOC = '../data/ptfi_1/'
