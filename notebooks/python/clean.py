@@ -186,7 +186,7 @@ class DrawPointAssayCleaner(Cleaner):
         # ]
         # assay.iloc[np.array(idxs).flatten()]
 
-        # TODO: combine the data from the same samples
+        # # TODO: combine the data from the same samples
 
         # for combine_ids in idxs:
         #     w = []
@@ -219,6 +219,28 @@ class DrawPointAssayCleaner(Cleaner):
         #     assay = assay.drop(axis=0, index=combine_ids)
         #     df_dictionary = pd.DataFrame([sample])
         #     assay = pd.concat([assay, df_dictionary], ignore_index=True)
+            
+        merge_groups = [
+            [16209, 16210], 
+            [18704, 18705], 
+            [18739, 18740]
+        ]
+
+        columns_to_combine = list(data.columns)[7:12]
+
+        for group in merge_groups:
+            weights = [data.iloc[idx]['weight'] for idx in group]
+
+            new_values = {}
+            for column in columns_to_combine:
+                values = [data.iloc[idx][column] for idx in group]
+                new_values[column] = np.average(values, weights=weights)
+
+            data.at[group[0], 'weight'] = sum(weights)
+            for column, value in new_values.items():
+                data.at[group[0], column] = value
+                
+            data = data.drop(group[1:])
 
         return data
 
