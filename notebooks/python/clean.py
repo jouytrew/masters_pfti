@@ -46,8 +46,9 @@ class PCBCCleaner(Cleaner):
     
     @staticmethod
     def _filter_data(data):
-        earliest_dp = dt.date(2020, 10, 2)  # Earliest date in the drawpoints dataset
-        filtered_data = data.query('date > @earliest_dp')
+        # earliest_dp = dt.date(2020, 10, 2)  # Earliest date in the drawpoints dataset
+        earliest_dp = dt.date(2020, 10, 1)
+        filtered_data = data.query('date >= @earliest_dp')
         
         return filtered_data     
     
@@ -192,7 +193,7 @@ class DrawPointAssayCleaner(Cleaner):
             data = data.drop(group[1:])
 
         return data
-
+    
 class BlockModelCleaner(Cleaner):
     @staticmethod
     def get_processed_data():
