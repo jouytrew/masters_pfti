@@ -169,57 +169,6 @@ class DrawPointAssayCleaner(Cleaner):
     
     # Take the repeated `SAMPLEID` values and combine them as they shouldn't be treated as independent values
     def _combine_duplicates(data: pd.DataFrame):
-        # idxs = [
-        #     [16209, 16210],
-        #     [18704, 18705],
-        #     [18739, 18740]
-        # ]
-        # data.iloc[np.array(idxs).flatten()]
-
-        # SAMPLE_WEIGHT = 'SampleWeight'
-        # numeric_cols = list(assay.columns)[7:-1]
-
-        # idxs = [
-        #     [16209, 16210],
-        #     [18704, 18705],
-        #     [18739, 18740]
-        # ]
-        # assay.iloc[np.array(idxs).flatten()]
-
-        # # TODO: combine the data from the same samples
-
-        # for combine_ids in idxs:
-        #     w = []
-        #     sample_data = {}
-            
-        #     for id in combine_ids:
-        #         row = assay.loc[id]
-                
-        #         w.append(row[SAMPLE_WEIGHT])
-        #         for col in numeric_cols:
-        #             if col not in sample_data:
-        #                 sample_data[col] = [row[col]]
-        #             else:
-        #                 sample_data[col].append(row[col])
-            
-        #     combined_sample = {}
-                    
-        #     sample = assay.loc[combine_ids[0]].to_dict()
-            
-        #     for id in combine_ids[1:]:
-        #         sample_add = assay.loc[id]
-                
-        #         for col in numeric_cols:
-        #             if np.isnan(sample_add[col]):
-        #                 sample[col] = np.nan
-        #             else:
-        #                 sample[col] = (sample[col] * sample[SAMPLE_WEIGHT]) + (sample_add[col] * sample_add[SAMPLE_WEIGHT]) / (sample[SAMPLE_WEIGHT] + sample_add[SAMPLE_WEIGHT])
-        #         sample[SAMPLE_WEIGHT] += sample_add[SAMPLE_WEIGHT]
-            
-        #     assay = assay.drop(axis=0, index=combine_ids)
-        #     df_dictionary = pd.DataFrame([sample])
-        #     assay = pd.concat([assay, df_dictionary], ignore_index=True)
-            
         merge_groups = [
             [16209, 16210], 
             [18704, 18705], 
