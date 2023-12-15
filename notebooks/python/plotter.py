@@ -56,9 +56,13 @@ def set_g_r_labels(ax: plt.Axes, ax_sec: plt.Axes, element: str):
     ax.set_xticks([0, 0.25, 0.5, 0.75, 1])
     ax.xaxis.set_major_formatter(mtick.PercentFormatter(1.0))
     
-    ax.set_ylabel(f"Cumulative {element} Grade", c="blue")
-    
-    ax_sec.set_ylabel(f"Cumulative {element} Recovery", c="red") 
+    if element != None:
+        ax.set_ylabel(f"Cumulative {element} Grade", c="blue")
+        ax_sec.set_ylabel(f"Cumulative {element} Recovery", c="red") 
+    else:
+        ax.set_ylabel(f"Cumulative Grade", c="blue")
+        ax_sec.set_ylabel(f"Cumulative Recovery", c="red") 
+        
     ax_sec.set_ylim(0, 1)
     ax_sec.set_yticks([0, 0.25, 0.5, 0.75, 1])
     ax_sec.yaxis.set_major_formatter(mtick.PercentFormatter(1.0))

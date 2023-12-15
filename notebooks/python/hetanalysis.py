@@ -62,7 +62,7 @@ class HetAnalysis:
     def get_info(self):
         return self._info
     
-    def get_grade(self):
+    def get_cml_grade(self):
         return self._info['cml_grade'].iloc[-1]
     
     def get_cml_weight(self):
