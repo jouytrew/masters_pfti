@@ -50,7 +50,7 @@ def scatter_g_r(ax: plt.Axes, ax_sec: plt.Axes, df: pd.DataFrame, color_g='blue'
     y = df['cml_recovery']
     ax_sec.scatter(x, y, color=color_r, **kwargs)
     
-def set_g_r_labels(ax: plt.Axes, ax_sec: plt.Axes, element: str):
+def set_g_r_labels(ax: plt.Axes, ax_sec: plt.Axes, element: str=None):
     ax.set_xlabel("Cumulative Mass %")
     ax.set_xlim(0, 1)
     ax.set_xticks([0, 0.25, 0.5, 0.75, 1])
